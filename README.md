@@ -29,17 +29,9 @@ Analyser le cycle de vie complet des employés :
 
 ```
 Scenario 10 - HR/
-├── notebooks/
-│   ├── 00_generate_synthetic_hr_data.ipynb   # Génération données synthétiques
-│   ├── 01_silver_modeling.ipynb              # Transformation Bronze → Silver
-│   ├── 02_text_enrichment.ipynb              # AI PII redaction + summarization
-│   └── 03_semantic_and_agent_assets.md       # Setup Fabric Data Agent
-├── agent/
-│   ├── agent_instructions.md                  # System prompt Data Agent
-│   └── example_queries.json                   # 25+ exemples de questions
 ├── data/
 │   └── raw/                                   # Données brutes générées
-│       ├── hr/
+│       ├── hr/                                # 8 CSV tables
 │       │   ├── employees.csv
 │       │   ├── departments.csv
 │       │   ├── positions.csv
@@ -48,15 +40,21 @@ Scenario 10 - HR/
 │       │   ├── absences.csv
 │       │   ├── training_records.csv
 │       │   └── hr_cases.csv
-│       └── reports_txt/                       # ~200 rapports .txt
+│       └── reports_txt/                       # ~200 rapports .txt (PII redacted)
 ├── docs/
-│   ├── schema.md                              # Dictionnaire de données
-│   ├── demo_story.md                          # Scénario narratif
-│   └── data_dictionary.md                     # Documentation générée
-├── config.yaml
-├── requirements.txt
+│   ├── schema.md                              # Dictionnaire de données (18 tables)
+│   ├── demo_story.md                          # Scénario narratif "From Hire to Champion"
+│   ├── data_agent_instructions.md             # System prompt Data Agent
+│   ├── data_agent_examples.md                 # 20 exemples de questions/réponses
+│   ├── dax_measures.md                        # Mesures DAX (Headcount, Attrition, etc.)
+│   ├── questions_demo.md                      # 15 questions "wow" pour démo
+│   └── fabric_setup.md                        # Guide déploiement Fabric complet
+├── src/
+│   ├── generate_hr_data.py                    # Script génération données (800+ lignes)
+│   └── config.yaml                            # Configuration volumes/distributions
 ├── AGENTS.md
-└── README.md (ce fichier)
+├── README.md (ce fichier)
+└── requirements.txt
 ```
 
 ---
@@ -65,15 +63,19 @@ Scenario 10 - HR/
 
 ### 1️⃣ Générer les Données Synthétiques
 
-```python
-# Ouvrir le notebook notebooks/00_generate_synthetic_hr_data.ipynb
-# Exécuter toutes les cellules (Ctrl+Shift+Enter)
+```bash
+# Installer les dépendances
+pip install -r requirements.txt
+
+# Générer les données (depuis le dossier src/)
+cd src
+python generate_hr_data.py
 ```
 
 **Output** :
-- `data/raw/hr/*.csv` : 8 tables CSV
-- `data/raw/reports_txt/*.txt` : ~200 rapports textuels
-- `docs/data_dictionary.md` : Schéma relationnel complet
+- `data/raw/hr/*.csv` : 8 tables CSV (~4 000 événements)
+- `data/raw/reports_txt/*.txt` : ~200 rapports textuels avec PII fictives
+- `docs/data_dictionary.md` : Schéma relationnel généré automatiquement
 
 **Durée** : ~2-3 minutes
 
@@ -96,8 +98,8 @@ Scenario 10 - HR/
 4. Créer dossier `reports_txt`
 5. Uploader tous les .txt de `data/raw/reports_txt/`
 
-**Option B : Via Notebook**
-```python
+**Option B : Via API/SDK**
+Voir [`docs/fabric_setup.md`](docs/fabric_setup.md) pour upload automatisé
 # Dans un notebook Fabric
 import os
 for csv_file in ["employees.csv", "departments.csv", ...]:
