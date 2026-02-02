@@ -1,0 +1,387 @@
+{
+  "example_queries": [
+    {
+      "category": "HR Operations - Headcount",
+      "questions": [
+        {
+          "question": "What is our current headcount?",
+          "variations": [
+            "How many employees do we have?",
+            "Show me total headcount",
+            "Current FTE count"
+          ]
+        },
+        {
+          "question": "How has headcount changed over the last {time_period}?",
+          "placeholders": {
+            "time_period": ["year", "quarter", "6 months", "12 months"]
+          }
+        },
+        {
+          "question": "What is the headcount breakdown by {dimension}?",
+          "placeholders": {
+            "dimension": ["department", "division", "location", "job level", "employment type"]
+          }
+        },
+        {
+          "question": "Which departments are growing fastest?",
+          "variations": [
+            "Show department headcount growth trends",
+            "Where are we hiring most?"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "HR Operations - Hiring & Exits",
+      "questions": [
+        {
+          "question": "How many new hires did we have in {time_period}?",
+          "placeholders": {
+            "time_period": ["Q4 2025", "2025", "last quarter", "last 6 months"]
+          }
+        },
+        {
+          "question": "What is our attrition rate for {time_period}?",
+          "placeholders": {
+            "time_period": ["2025", "Q4 2025", "the last 12 months"]
+          }
+        },
+        {
+          "question": "Show me attrition by {dimension}",
+          "placeholders": {
+            "dimension": ["department", "job level", "tenure", "location"]
+          }
+        },
+        {
+          "question": "What is the split between voluntary and involuntary turnover?",
+          "variations": [
+            "How many resignations vs terminations?",
+            "Show voluntary attrition rate"
+          ]
+        },
+        {
+          "question": "What are the top reasons employees are leaving (from exit interviews)?",
+          "variations": [
+            "Why are people quitting?",
+            "Main themes from exit interviews"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Talent & Mobility - Promotions",
+      "questions": [
+        {
+          "question": "How many promotions happened in {time_period}?",
+          "placeholders": {
+            "time_period": ["2025", "Q4 2025", "the last year"]
+          }
+        },
+        {
+          "question": "What is our promotion rate?",
+          "variations": [
+            "What percentage of employees get promoted annually?",
+            "Promotion rate trend over time"
+          ]
+        },
+        {
+          "question": "Show promotions by {dimension}",
+          "placeholders": {
+            "dimension": ["department", "from-level to-level", "job family"]
+          }
+        },
+        {
+          "question": "What is the average time to promotion from {level}?",
+          "placeholders": {
+            "level": ["Junior", "Intermediate", "Senior"]
+          }
+        }
+      ]
+    },
+    {
+      "category": "Talent & Mobility - Internal Moves",
+      "questions": [
+        {
+          "question": "How many internal transfers occurred in {time_period}?",
+          "placeholders": {
+            "time_period": ["2025", "the last 6 months", "Q3 2025"]
+          }
+        },
+        {
+          "question": "What is our internal mobility rate?",
+          "variations": [
+            "What percentage of employees change roles internally?"
+          ]
+        },
+        {
+          "question": "Which departments have the most incoming/outgoing transfers?",
+          "variations": [
+            "Show transfer flows between departments"
+          ]
+        },
+        {
+          "question": "What is the average tenure before an internal move?",
+          "variations": [
+            "How long do employees stay in a role before transferring?"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Performance & Engagement - Reviews",
+      "questions": [
+        {
+          "question": "Summarize performance review themes from {time_period}",
+          "placeholders": {
+            "time_period": ["Q4 2025", "2025", "the last quarter"]
+          }
+        },
+        {
+          "question": "What is the distribution of performance ratings?",
+          "variations": [
+            "Show rating breakdown (5-star scale)",
+            "How many employees rated exceptional vs needs improvement?"
+          ]
+        },
+        {
+          "question": "What are the top development areas mentioned in performance reviews?",
+          "variations": [
+            "Common growth opportunities identified"
+          ]
+        },
+        {
+          "question": "What are employees' career aspirations (from performance reviews)?",
+          "variations": [
+            "What do employees want in their careers?"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Performance & Engagement - Training",
+      "questions": [
+        {
+          "question": "How many training hours per employee did we deliver in {time_period}?",
+          "placeholders": {
+            "time_period": ["2025", "Q4 2025", "the last year"]
+          }
+        },
+        {
+          "question": "What is our training investment per FTE?",
+          "variations": [
+            "How much do we spend on training per employee?",
+            "Total training cost breakdown"
+          ]
+        },
+        {
+          "question": "Which training categories are most popular?",
+          "variations": [
+            "Top training programs by enrollment",
+            "Training distribution by category"
+          ]
+        },
+        {
+          "question": "What is the training completion rate?",
+          "variations": [
+            "How many employees complete their trainings?"
+          ]
+        },
+        {
+          "question": "Which job families receive the most training hours?",
+          "variations": [
+            "Training investment by department"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Compliance - Absences",
+      "questions": [
+        {
+          "question": "What is the average absence rate (days per employee per year)?",
+          "variations": [
+            "How many days off do employees take on average?"
+          ]
+        },
+        {
+          "question": "Show absence breakdown by type",
+          "variations": [
+            "How many vacation vs sick leave days?",
+            "Distribution of absence types"
+          ]
+        },
+        {
+          "question": "Which departments have the highest absence rates?",
+          "variations": [
+            "Absence patterns by department"
+          ]
+        },
+        {
+          "question": "Are there seasonal patterns in absences?",
+          "variations": [
+            "When do employees take the most time off?"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Compliance - HR Cases",
+      "questions": [
+        {
+          "question": "How many open HR cases do we have?",
+          "variations": [
+            "Show current HR case volume",
+            "Active HR cases by priority"
+          ]
+        },
+        {
+          "question": "What are the most common types of HR cases?",
+          "variations": [
+            "HR case distribution by type"
+          ]
+        },
+        {
+          "question": "What is the average case resolution time?",
+          "variations": [
+            "How long does it take to resolve HR cases?",
+            "Case resolution time by case type"
+          ]
+        },
+        {
+          "question": "Which HR cases are overdue or taking the longest?",
+          "variations": [
+            "Show cases open > 90 days"
+          ]
+        },
+        {
+          "question": "What are the common themes in HR case notes (AI summary)?",
+          "variations": [
+            "Patterns in HR incidents"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Executive - Top KPIs",
+      "questions": [
+        {
+          "question": "Show me the top 5 HR KPIs",
+          "variations": [
+            "Executive HR dashboard",
+            "Key people metrics summary"
+          ]
+        },
+        {
+          "question": "What are our biggest HR risks right now?",
+          "variations": [
+            "Where should HR focus attention?",
+            "Top people challenges"
+          ]
+        },
+        {
+          "question": "Compare our HR metrics to industry benchmarks",
+          "variations": [
+            "How do we stack up against competitors?",
+            "Are our attrition/promotion/training rates competitive?"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Executive - Trends",
+      "questions": [
+        {
+          "question": "Show attrition trend over the last {time_period}",
+          "placeholders": {
+            "time_period": ["3 years", "2 years", "12 months"]
+          }
+        },
+        {
+          "question": "Is our promotion rate improving over time?",
+          "variations": [
+            "Promotion rate trend",
+            "Career development trend"
+          ]
+        },
+        {
+          "question": "How has training investment changed year-over-year?",
+          "variations": [
+            "Training budget trend"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Advanced - Cohort Analysis",
+      "questions": [
+        {
+          "question": "What is the retention rate for employees hired in {year}?",
+          "placeholders": {
+            "year": ["2023", "2024", "2025"]
+          }
+        },
+        {
+          "question": "Compare attrition rates between new hires (<1 year tenure) vs tenured employees",
+          "variations": [
+            "Attrition by tenure cohort"
+          ]
+        },
+        {
+          "question": "Which hire cohort has the highest promotion rate?",
+          "variations": [
+            "Career progression by hire year"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Advanced - Compensation",
+      "questions": [
+        {
+          "question": "What is the average salary by {dimension}?",
+          "placeholders": {
+            "dimension": ["job level", "department", "job family"]
+          },
+          "note": "Only show if group size >= 10 employees"
+        },
+        {
+          "question": "How does compensation change with tenure?",
+          "variations": [
+            "Salary growth curve by years of service"
+          ]
+        },
+        {
+          "question": "What is the compa-ratio distribution?",
+          "note": "Compa-ratio = actual salary / midpoint of salary band"
+        }
+      ]
+    },
+    {
+      "category": "Advanced - Predictive",
+      "questions": [
+        {
+          "question": "Based on historical trends, how many employees will we have in {time_period}?",
+          "placeholders": {
+            "time_period": ["6 months", "Q1 2026", "end of 2026"]
+          },
+          "note": "Use linear regression on headcount trend"
+        },
+        {
+          "question": "If current attrition trend continues, how many employees will leave next quarter?",
+          "variations": [
+            "Projected exits for Q1 2026"
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "total_examples": 70,
+    "categories": 12,
+    "supports_placeholders": true,
+    "language": "English (responses in French if requested)",
+    "date_range_covered": "2023-01-01 to 2025-12-31",
+    "last_updated": "2026-02-02"
+  }
+}

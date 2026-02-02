@@ -1,0 +1,189 @@
+# Configuration for HR Employee Lifecycle Demo Data Generation
+
+# Seed for reproducibility
+seed: 42
+
+# Data volumes
+volumes:
+  employees: 500
+  departments: 12
+  positions: 45
+  lifecycle_events_per_employee_avg: 8  # Over 3 years
+  hr_cases_percentage: 0.15  # 15% of employees have HR cases
+  text_reports_percentage: 0.40  # 40% of events generate text reports
+
+# Date ranges
+date_ranges:
+  start_date: "2023-01-01"
+  end_date: "2025-12-31"
+  historical_hire_window_years: 10  # Some employees hired up to 10 years ago
+
+# Business parameters
+business_params:
+  # Lifecycle event distributions (weights)
+  lifecycle_events:
+    - event_type: "hire"
+      weight: 10
+      avg_per_employee: 1
+    - event_type: "onboarding_completed"
+      weight: 10
+      avg_per_employee: 1
+    - event_type: "probation_completed"
+      weight: 9
+      avg_per_employee: 1
+    - event_type: "internal_move"
+      weight: 8
+      avg_per_employee: 0.5
+    - event_type: "promotion"
+      weight: 12
+      avg_per_employee: 1.2
+    - event_type: "performance_review"
+      weight: 30
+      avg_per_employee: 3.0
+    - event_type: "training_completed"
+      weight: 15
+      avg_per_employee: 2.5
+    - event_type: "parental_leave_start"
+      weight: 3
+      avg_per_employee: 0.1
+    - event_type: "sick_leave_long"
+      weight: 2
+      avg_per_employee: 0.15
+    - event_type: "disciplinary_action"
+      weight: 1
+      avg_per_employee: 0.05
+    - event_type: "exit_interview"
+      weight: 5
+      avg_per_employee: 0.2
+    - event_type: "resignation"
+      weight: 4
+      avg_per_employee: 0.15
+    - event_type: "termination"
+      weight: 1
+      avg_per_employee: 0.05
+
+  # Salary bands (EUR/year)
+  salary_bands:
+    junior: [30000, 45000]
+    intermediate: [45000, 65000]
+    senior: [65000, 95000]
+    lead: [95000, 130000]
+    executive: [130000, 250000]
+
+  # Performance review ratings
+  performance_ratings:
+    - rating: "Exceptional"
+      weight: 10
+      promotion_probability: 0.40
+    - rating: "Exceeds Expectations"
+      weight: 25
+      promotion_probability: 0.20
+    - rating: "Meets Expectations"
+      weight: 50
+      promotion_probability: 0.05
+    - rating: "Needs Improvement"
+      weight: 12
+      promotion_probability: 0.00
+    - rating: "Unsatisfactory"
+      weight: 3
+      promotion_probability: 0.00
+
+  # Absence types
+  absence_types:
+    - type: "sick_leave_short"
+      avg_duration_days: 2
+      frequency_per_year: 1.5
+    - type: "sick_leave_long"
+      avg_duration_days: 15
+      frequency_per_year: 0.1
+    - type: "parental_leave"
+      avg_duration_days: 90
+      frequency_per_year: 0.05
+    - type: "vacation"
+      avg_duration_days: 10
+      frequency_per_year: 2.0
+    - type: "unpaid_leave"
+      avg_duration_days: 5
+      frequency_per_year: 0.2
+
+  # HR case categories
+  hr_case_types:
+    - type: "performance_concern"
+      weight: 25
+      avg_duration_days: 45
+    - type: "interpersonal_conflict"
+      weight: 20
+      avg_duration_days: 30
+    - type: "accommodation_request"
+      weight: 15
+      avg_duration_days: 20
+    - type: "policy_violation"
+      weight: 10
+      avg_duration_days: 60
+    - type: "compensation_inquiry"
+      weight: 15
+      avg_duration_days: 15
+    - type: "harassment_complaint"
+      weight: 5
+      avg_duration_days: 90
+    - type: "workplace_safety"
+      weight: 10
+      avg_duration_days: 25
+
+  # Attrition rates (annual)
+  attrition_rate: 0.12  # 12% annual turnover
+
+  # Training categories
+  training_categories:
+    - "Technical Skills"
+    - "Leadership Development"
+    - "Compliance & Ethics"
+    - "Product Knowledge"
+    - "Customer Service"
+    - "Safety & Security"
+    - "Soft Skills"
+    - "Digital Transformation"
+
+# Report text generation
+text_reports:
+  # Types of reports to generate
+  report_types:
+    - type: "performance_review"
+      linked_event: "performance_review"
+      generate_probability: 0.90
+    - type: "exit_interview"
+      linked_event: "exit_interview"
+      generate_probability: 1.00
+    - type: "disciplinary_note"
+      linked_event: "disciplinary_action"
+      generate_probability: 1.00
+    - type: "case_resolution"
+      linked_to: "hr_cases"
+      generate_probability: 0.70
+    - type: "onboarding_feedback"
+      linked_event: "onboarding_completed"
+      generate_probability: 0.30
+    - type: "promotion_justification"
+      linked_event: "promotion"
+      generate_probability: 0.50
+
+  # PII elements to include (for AI redaction demo)
+  include_pii:
+    email: true
+    phone: true
+    address: false
+    manager_name: true
+    colleague_names: true
+
+# Countries/regions (minimal for compliance)
+regions:
+  - France
+  - Germany
+  - Spain
+  - Italy
+  - Netherlands
+  - Belgium
+  - Switzerland
+  - Poland
+  - Sweden
+  - Ireland
