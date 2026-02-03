@@ -3,6 +3,11 @@
 # Seed for reproducibility
 seed: 42
 
+# Output paths (relative to Scenario 10 - HR/ directory)
+paths:
+  hr: "data/raw/hr"
+  reports_txt: "data/raw/reports_txt"
+
 # Data volumes
 volumes:
   employees: 500

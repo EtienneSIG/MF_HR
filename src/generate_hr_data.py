@@ -52,6 +52,15 @@ class HRDataGenerator:
         self.regions = self.config['regions']
         self.salary_bands = self.config['business_params']['salary_bands']
         
+        # Define output paths
+        self.base_path = Path(config_path).parent.parent
+        self.hr_path = self.base_path / self.config['paths']['hr']
+        self.reports_path = self.base_path / self.config['paths']['reports_txt']
+        
+        # Create directories if they don't exist
+        self.hr_path.mkdir(parents=True, exist_ok=True)
+        self.reports_path.mkdir(parents=True, exist_ok=True)
+        
         # Store generated data
         self.departments_df = None
         self.positions_df = None
@@ -596,7 +605,7 @@ class HRDataGenerator:
             )
             
             filename = f"perf_review_{event['event_id']}.txt"
-            with open(REPORTS_PATH / filename, 'w', encoding='utf-8') as f:
+            with open(self.reports_path / filename, 'w', encoding='utf-8') as f:
                 f.write(f"REPORT_TYPE: performance_review\n")
                 f.write(f"EMPLOYEE_ID: {emp['employee_id']}\n")
                 f.write(f"EVENT_ID: {event['event_id']}\n")
@@ -625,7 +634,7 @@ class HRDataGenerator:
             )
             
             filename = f"exit_interview_{event['event_id']}.txt"
-            with open(REPORTS_PATH / filename, 'w', encoding='utf-8') as f:
+            with open(self.reports_path / filename, 'w', encoding='utf-8') as f:
                 f.write(f"REPORT_TYPE: exit_interview\n")
                 f.write(f"EMPLOYEE_ID: {emp['employee_id']}\n")
                 f.write(f"EVENT_ID: {event['event_id']}\n")
@@ -655,7 +664,7 @@ class HRDataGenerator:
             )
             
             filename = f"hr_case_{case['case_id']}.txt"
-            with open(REPORTS_PATH / filename, 'w', encoding='utf-8') as f:
+            with open(self.reports_path / filename, 'w', encoding='utf-8') as f:
                 f.write(f"REPORT_TYPE: case_note\n")
                 f.write(f"EMPLOYEE_ID: {emp['employee_id']}\n")
                 f.write(f"CASE_ID: {case['case_id']}\n")
@@ -680,7 +689,7 @@ class HRDataGenerator:
             )
             
             filename = f"onboarding_{event['event_id']}.txt"
-            with open(REPORTS_PATH / filename, 'w', encoding='utf-8') as f:
+            with open(self.reports_path / filename, 'w', encoding='utf-8') as f:
                 f.write(f"REPORT_TYPE: onboarding_feedback\n")
                 f.write(f"EMPLOYEE_ID: {emp['employee_id']}\n")
                 f.write(f"EVENT_ID: {event['event_id']}\n")
@@ -694,16 +703,16 @@ class HRDataGenerator:
     
     def save_all_data(self):
         """Save all dataframes to CSV"""
-        self.departments_df.to_csv(HR_PATH / 'departments.csv', index=False, encoding='utf-8')
-        self.positions_df.to_csv(HR_PATH / 'positions.csv', index=False, encoding='utf-8')
-        self.employees_df.to_csv(HR_PATH / 'employees.csv', index=False, encoding='utf-8')
-        self.lifecycle_events_df.to_csv(HR_PATH / 'lifecycle_events.csv', index=False, encoding='utf-8')
-        self.compensation_df.to_csv(HR_PATH / 'compensation_history.csv', index=False, encoding='utf-8')
-        self.absences_df.to_csv(HR_PATH / 'absences.csv', index=False, encoding='utf-8')
-        self.training_df.to_csv(HR_PATH / 'training_records.csv', index=False, encoding='utf-8')
-        self.hr_cases_df.to_csv(HR_PATH / 'hr_cases.csv', index=False, encoding='utf-8')
+        self.departments_df.to_csv(self.hr_path / 'departments.csv', index=False, encoding='utf-8')
+        self.positions_df.to_csv(self.hr_path / 'positions.csv', index=False, encoding='utf-8')
+        self.employees_df.to_csv(self.hr_path / 'employees.csv', index=False, encoding='utf-8')
+        self.lifecycle_events_df.to_csv(self.hr_path / 'lifecycle_events.csv', index=False, encoding='utf-8')
+        self.compensation_df.to_csv(self.hr_path / 'compensation_history.csv', index=False, encoding='utf-8')
+        self.absences_df.to_csv(self.hr_path / 'absences.csv', index=False, encoding='utf-8')
+        self.training_df.to_csv(self.hr_path / 'training_records.csv', index=False, encoding='utf-8')
+        self.hr_cases_df.to_csv(self.hr_path / 'hr_cases.csv', index=False, encoding='utf-8')
         
-        print(f"✅ All CSV files saved to {HR_PATH}")
+        print(f"✅ All CSV files saved to {self.hr_path}")
     
     def generate_data_dictionary(self):
         """Generate comprehensive data dictionary"""
@@ -973,7 +982,7 @@ Training Cost per FTE = SUM(training cost) / Headcount
 **⚠️ IMPORTANT: All data in this dataset is SYNTHETIC and FICTIONAL. No real personal data is included.**
 """
         
-        dict_path = BASE_PATH / "docs" / "data_dictionary.md"
+        dict_path = self.base_path / "docs" / "data_dictionary.md"
         dict_path.parent.mkdir(parents=True, exist_ok=True)
         
         with open(dict_path, 'w', encoding='utf-8') as f:
@@ -1095,9 +1104,9 @@ if __name__ == "__main__":
     
     print("\n✨ DATA GENERATION COMPLETE! ✨")
     print(f"\n📁 Output locations:")
-    print(f"   CSV files: {HR_PATH}")
-    print(f"   Text reports: {REPORTS_PATH}")
-    print(f"   Data dictionary: {BASE_PATH / 'docs' / 'data_dictionary.md'}")
+    print(f"   CSV files: {generator.hr_path}")
+    print(f"   Text reports: {generator.reports_path}")
+    print(f"   Data dictionary: {generator.base_path / 'docs' / 'data_dictionary.md'}")
     print("\n🎯 Next steps:")
     print("   1. Upload files to Microsoft Fabric Lakehouse")
     print("   2. Run notebook 01_silver_modeling.ipynb")
