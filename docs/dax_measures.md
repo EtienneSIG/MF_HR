@@ -4,29 +4,31 @@ Ce fichier contient toutes les mesures DAX testées et validées pour le semanti
 
 ## Tables Requises
 
-**Tables sources (CSV) :**
-- employees
-- departments
-- positions
-- lifecycle_events
-- compensation_history
-- absences
-- training_records
-- hr_cases
+**Dimensions (tables de référence) :**
+- dim_employees
+- dim_departments
+- dim_positions
 
-**Note :** Ces mesures utilisent les tables CSV sources directement. Pour un modèle optimisé, transformez d'abord en star schema (dim_* et fact_*) via les notebooks Fabric.
+**Facts (tables de faits) :**
+- fact_lifecycle_events
+- fact_compensation_history
+- fact_absences
+- fact_training_records
+- fact_hr_cases
+
+**Note :** Ces mesures utilisent les tables CSV sources directement. Pour un modèle optimisé, transformez d'abord en star schema via les notebooks Fabric.
 
 ## Relations Clés
 
 ```
-employees[employee_id] 1 ----→ * lifecycle_events[employee_id]
-employees[employee_id] 1 ----→ * compensation_history[employee_id]
-employees[employee_id] 1 ----→ * absences[employee_id]
-employees[employee_id] 1 ----→ * training_records[employee_id]
-employees[employee_id] 1 ----→ * hr_cases[employee_id]
+dim_employees[employee_id] 1 ----→ * fact_lifecycle_events[employee_id]
+dim_employees[employee_id] 1 ----→ * fact_compensation_history[employee_id]
+dim_employees[employee_id] 1 ----→ * fact_absences[employee_id]
+dim_employees[employee_id] 1 ----→ * fact_training_records[employee_id]
+dim_employees[employee_id] 1 ----→ * fact_hr_cases[employee_id]
 
-departments[department_id] 1 ----→ * employees[department_id]
-positions[position_id] 1 ----→ * employees[position_id]
+dim_departments[department_id] 1 ----→ * dim_employees[department_id]
+dim_positions[position_id] 1 ----→ * dim_employees[position_id]
 ```
 
 ---
@@ -40,9 +42,9 @@ Effectif actuel (employés actifs).
 ```dax
 Current Headcount = 
 CALCULATE(
-    DISTINCTCOUNT(employees[employee_id]),
-    employees[status] = "active",
-    ISBLANK(employees[termination_date])
+    DISTINCTCOUNT(dim_employees[employee_id]),
+    dim_employees[status] = "active",
+    ISBLANK(dim_employees[termination_date])
 )
 ```
 
@@ -58,7 +60,7 @@ Nombre total d'employés (actifs + historique).
 
 ```dax
 Total Employees = 
-DISTINCTCOUNT(employees[employee_id])
+DISTINCTCOUNT(dim_employees[employee_id])
 ```
 
 **Format :** Nombre entier  
@@ -73,9 +75,9 @@ Employés actifs (pour calculs de ratios).
 ```dax
 Active Employees = 
 CALCULATE(
-    DISTINCTCOUNT(employees[employee_id]),
-    employees[status] = "active",
-    ISBLANK(employees[termination_date])
+    DISTINCTCOUNT(dim_employees[employee_id]),
+    dim_employees[status] = "active",
+    ISBLANK(dim_employees[termination_date])
 )
 ```
 
@@ -111,8 +113,8 @@ Taux d'attrition annuel.
 Attrition Rate = 
 VAR ExitsCount = 
     CALCULATE(
-        DISTINCTCOUNT(lifecycle_events[employee_id]),
-        lifecycle_events[event_type] IN {"resignation", "termination"}
+        DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+        fact_lifecycle_events[event_type] IN {"resignation", "termination"}
     )
 VAR ActiveEmployees = [Active Employees]
 RETURN
@@ -132,8 +134,8 @@ Nombre total de départs.
 ```dax
 Total Exits = 
 CALCULATE(
-    DISTINCTCOUNT(lifecycle_events[employee_id]),
-    lifecycle_events[event_type] IN {"resignation", "termination"}
+    DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+    fact_lifecycle_events[event_type] IN {"resignation", "termination"}
 )
 ```
 
@@ -149,8 +151,8 @@ Démissions (départs volontaires).
 ```dax
 Voluntary Exits = 
 CALCULATE(
-    DISTINCTCOUNT(lifecycle_events[employee_id]),
-    lifecycle_events[event_type] = "resignation"
+    DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+    fact_lifecycle_events[event_type] = "resignation"
 )
 ```
 
@@ -166,8 +168,8 @@ Licenciements (départs involontaires).
 ```dax
 Involuntary Exits = 
 CALCULATE(
-    DISTINCTCOUNT(lifecycle_events[employee_id]),
-    lifecycle_events[event_type] = "termination"
+    DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+    fact_lifecycle_events[event_type] = "termination"
 )
 ```
 
@@ -203,8 +205,8 @@ Nombre de promotions.
 ```dax
 Total Promotions = 
 CALCULATE(
-    DISTINCTCOUNT(lifecycle_events[employee_id]),
-    lifecycle_events[event_type] = "promotion"
+    DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+    fact_lifecycle_events[event_type] = "promotion"
 )
 ```
 
@@ -238,8 +240,8 @@ Mutations internes (sans promotion).
 ```dax
 Internal Moves = 
 CALCULATE(
-    DISTINCTCOUNT(lifecycle_events[employee_id]),
-    lifecycle_events[event_type] = "internal_move"
+    DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+    fact_lifecycle_events[event_type] = "internal_move"
 )
 ```
 
@@ -278,12 +280,12 @@ VAR AvgDays =
         AVERAGEX(
             lifecycle_events,
             DATEDIFF(
-                RELATED(employees[hire_date]),
-                lifecycle_events[event_date],
+                RELATED(dim_employees[hire_date]),
+                fact_lifecycle_events[event_date],
                 DAY
             )
         ),
-        lifecycle_events[event_type] = "promotion"
+        fact_lifecycle_events[event_type] = "promotion"
     )
 RETURN
     DIVIDE(AvgDays, 365, BLANK())
@@ -303,7 +305,7 @@ Heures totales de formation.
 
 ```dax
 Total Training Hours = 
-SUM(training_records[hours])
+SUM(fact_training_records[hours])
 ```
 
 **Format :** Nombre entier + " heures"  
@@ -335,7 +337,7 @@ Coût total de formation.
 
 ```dax
 Total Training Cost = 
-SUM(training_records[cost_eur])
+SUM(fact_training_records[cost_eur])
 ```
 
 **Format :** Devise (EUR)  
@@ -370,7 +372,7 @@ Training Completion Rate =
 VAR CompletedTrainings = 
     CALCULATE(
         COUNTROWS(training_records),
-        training_records[completion_status] = "completed"
+        fact_training_records[completion_status] = "completed"
     )
 VAR TotalTrainings = COUNTROWS(training_records)
 RETURN
@@ -391,7 +393,7 @@ Jours totaux d'absence.
 
 ```dax
 Total Absence Days = 
-SUM(absences[days_taken])
+SUM(fact_absences[days_taken])
 ```
 
 **Format :** Nombre entier + " jours"  
@@ -424,8 +426,8 @@ Jours d'arrêt maladie.
 ```dax
 Sick Leave Days = 
 CALCULATE(
-    SUM(absences[days_taken]),
-    absences[absence_type] IN {"sick_leave_short", "sick_leave_long"}
+    SUM(fact_absences[days_taken]),
+    fact_absences[absence_type] IN {"sick_leave_short", "sick_leave_long"}
 )
 ```
 
@@ -458,7 +460,7 @@ Cas RH en cours (non résolus).
 Open HR Cases = 
 CALCULATE(
     COUNTROWS(hr_cases),
-    hr_cases[case_status] IN {"open", "in_progress"}
+    fact_hr_cases[case_status] IN {"open", "in_progress"}
 )
 ```
 
@@ -477,13 +479,13 @@ CALCULATE(
     AVERAGEX(
         hr_cases,
         DATEDIFF(
-            hr_cases[case_date],
-            hr_cases[resolution_date],
+            fact_hr_cases[case_date],
+            fact_hr_cases[resolution_date],
             DAY
         )
     ),
-    hr_cases[case_status] IN {"resolved", "closed"},
-    NOT(ISBLANK(hr_cases[resolution_date]))
+    fact_hr_cases[case_status] IN {"resolved", "closed"},
+    NOT(ISBLANK(fact_hr_cases[resolution_date]))
 )
 ```
 
@@ -502,9 +504,9 @@ Salaire de base moyen.
 ```dax
 Avg Base Salary = 
 CALCULATE(
-    AVERAGE(compensation_history[base_salary_eur]),
-    RELATED(employees[status]) = "active",
-    ISBLANK(RELATED(employees[termination_date]))
+    AVERAGE(fact_compensation_history[base_salary_eur]),
+    RELATED(dim_employees[status]) = "active",
+    ISBLANK(RELATED(dim_employees[termination_date]))
 )
 ```
 
@@ -522,11 +524,11 @@ Total Compensation Budget =
 CALCULATE(
     SUMX(
         compensation_history,
-        compensation_history[base_salary_eur] + 
-        compensation_history[base_salary_eur] * compensation_history[bonus_target_pct] / 100
+        fact_compensation_history[base_salary_eur] + 
+        fact_compensation_history[base_salary_eur] * fact_compensation_history[bonus_target_pct] / 100
     ),
-    RELATED(employees[status]) = "active",
-    ISBLANK(RELATED(employees[termination_date]))
+    RELATED(dim_employees[status]) = "active",
+    ISBLANK(RELATED(dim_employees[termination_date]))
 )
 ```
 
@@ -559,21 +561,21 @@ Attrition des nouvelles embauches (< 1 an).
 New Hire Attrition = 
 VAR NewHireExits = 
     CALCULATE(
-        DISTINCTCOUNT(lifecycle_events[employee_id]),
-        lifecycle_events[event_type] IN {"resignation", "termination"},
+        DISTINCTCOUNT(fact_lifecycle_events[employee_id]),
+        fact_lifecycle_events[event_type] IN {"resignation", "termination"},
         FILTER(
             ALL(employees),
-            DATEDIFF(employees[hire_date], TODAY(), DAY) < 365
+            DATEDIFF(dim_employees[hire_date], TODAY(), DAY) < 365
         )
     )
 VAR NewHires = 
     CALCULATE(
-        DISTINCTCOUNT(employees[employee_id]),
+        DISTINCTCOUNT(dim_employees[employee_id]),
         FILTER(
             ALL(employees),
-            DATEDIFF(employees[hire_date], TODAY(), DAY) < 365 &&
-            employees[status] = "active" &&
-            ISBLANK(employees[termination_date])
+            DATEDIFF(dim_employees[hire_date], TODAY(), DAY) < 365 &&
+            dim_employees[status] = "active" &&
+            ISBLANK(dim_employees[termination_date])
         )
     )
 RETURN
@@ -596,7 +598,7 @@ VAR CurrentYearHeadcount = [Current Headcount]
 VAR PriorYearHeadcount = 
     CALCULATE(
         [Current Headcount],
-        DATEADD(lifecycle_events[event_date], -1, YEAR)
+        DATEADD(fact_lifecycle_events[event_date], -1, YEAR)
     )
 RETURN
     DIVIDE(
@@ -622,8 +624,8 @@ Attrition Rate Trend =
 CALCULATE(
     [Attrition Rate],
     DATESINPERIOD(
-        lifecycle_events[event_date],
-        MAX(lifecycle_events[event_date]),
+        fact_lifecycle_events[event_date],
+        MAX(fact_lifecycle_events[event_date]),
         -12,
         MONTH
     )
@@ -644,8 +646,8 @@ Promotion Rate Trend =
 CALCULATE(
     [Promotion Rate],
     DATESINPERIOD(
-        lifecycle_events[event_date],
-        MAX(lifecycle_events[event_date]),
+        fact_lifecycle_events[event_date],
+        MAX(fact_lifecycle_events[event_date]),
         -12,
         MONTH
     )
@@ -725,7 +727,7 @@ Contexte de date actif.
 ```dax
 Date Context = 
 IF(
-    ISFILTERED(lifecycle_events[event_date]),
+    ISFILTERED(fact_lifecycle_events[event_date]),
     "Période filtrée",
     "Toutes périodes"
 )
