@@ -703,14 +703,17 @@ class HRDataGenerator:
     
     def save_all_data(self):
         """Save all dataframes to CSV"""
-        self.departments_df.to_csv(self.hr_path / 'departments.csv', index=False, encoding='utf-8')
-        self.positions_df.to_csv(self.hr_path / 'positions.csv', index=False, encoding='utf-8')
-        self.employees_df.to_csv(self.hr_path / 'employees.csv', index=False, encoding='utf-8')
-        self.lifecycle_events_df.to_csv(self.hr_path / 'lifecycle_events.csv', index=False, encoding='utf-8')
-        self.compensation_df.to_csv(self.hr_path / 'compensation_history.csv', index=False, encoding='utf-8')
-        self.absences_df.to_csv(self.hr_path / 'absences.csv', index=False, encoding='utf-8')
-        self.training_df.to_csv(self.hr_path / 'training_records.csv', index=False, encoding='utf-8')
-        self.hr_cases_df.to_csv(self.hr_path / 'hr_cases.csv', index=False, encoding='utf-8')
+        # Dimensions (reference data)
+        self.departments_df.to_csv(self.hr_path / 'dim_departments.csv', index=False, encoding='utf-8')
+        self.positions_df.to_csv(self.hr_path / 'dim_positions.csv', index=False, encoding='utf-8')
+        self.employees_df.to_csv(self.hr_path / 'dim_employees.csv', index=False, encoding='utf-8')
+        
+        # Facts (transactional data)
+        self.lifecycle_events_df.to_csv(self.hr_path / 'fact_lifecycle_events.csv', index=False, encoding='utf-8')
+        self.compensation_df.to_csv(self.hr_path / 'fact_compensation_history.csv', index=False, encoding='utf-8')
+        self.absences_df.to_csv(self.hr_path / 'fact_absences.csv', index=False, encoding='utf-8')
+        self.training_df.to_csv(self.hr_path / 'fact_training_records.csv', index=False, encoding='utf-8')
+        self.hr_cases_df.to_csv(self.hr_path / 'fact_hr_cases.csv', index=False, encoding='utf-8')
         
         print(f"✅ All CSV files saved to {self.hr_path}")
     

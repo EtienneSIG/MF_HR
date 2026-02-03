@@ -44,8 +44,8 @@ class SchemaValidator:
         """Valide les tables HR"""
         print("--- Validation HR Tables ---")
         
-        # employees (CRITIQUE pour DAX)
-        employees = self.load_csv('hr/employees.csv')
+        # dim_employees (CRITIQUE pour DAX)
+        employees = self.load_csv('hr/dim_employees.csv')
         if employees is not None:
             self.check_columns(employees, 'employees', [
                 'employee_id', 'first_name', 'last_name', 'email', 'phone',
@@ -72,8 +72,8 @@ class SchemaValidator:
                 else:
                     print(f"  ✅ employees.status correct (active, terminated)")
         
-        # departments
-        departments = self.load_csv('hr/departments.csv')
+        # dim_departments
+        departments = self.load_csv('hr/dim_departments.csv')
         if departments is not None:
             self.check_columns(departments, 'departments', [
                 'department_id', 'department_name', 'division',
@@ -85,8 +85,8 @@ class SchemaValidator:
             if not sample_id.startswith('DEPT_'):
                 self.errors.append("departments.department_id doit être au format 'DEPT_XXX'")
         
-        # positions
-        positions = self.load_csv('hr/positions.csv')
+        # dim_positions
+        positions = self.load_csv('hr/dim_positions.csv')
         if positions is not None:
             self.check_columns(positions, 'positions', [
                 'position_id', 'job_title', 'job_family', 'job_level',
@@ -136,8 +136,8 @@ class SchemaValidator:
                 else:
                     print(f"  ✅ compensation_history.base_salary_eur correct (> 0)")
         
-        # absences
-        absences = self.load_csv('hr/absences.csv')
+        # fact_absences
+        absences = self.load_csv('hr/fact_absences.csv')
         if absences is not None:
             self.check_columns(absences, 'absences', [
                 'absence_id', 'employee_id', 'start_date', 'end_date',
@@ -153,8 +153,8 @@ class SchemaValidator:
                 'completion_status', 'hours', 'cost_eur', 'provider'
             ])
         
-        # hr_cases
-        cases = self.load_csv('hr/hr_cases.csv')
+        # fact_hr_cases
+        cases = self.load_csv('hr/fact_hr_cases.csv')
         if cases is not None:
             self.check_columns(cases, 'hr_cases', [
                 'case_id', 'employee_id', 'case_date', 'case_type',
