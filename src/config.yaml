@@ -15,7 +15,7 @@ volumes:
   positions: 45
   lifecycle_events_per_employee_avg: 8  # Over 3 years
   hr_cases_percentage: 0.15  # 15% of employees have HR cases
-  text_reports_percentage: 0.40  # 40% of events generate text reports
+  text_reports_percentage: 0.20  # 20% of events generate text reports
 
 # Date ranges
 date_ranges:
